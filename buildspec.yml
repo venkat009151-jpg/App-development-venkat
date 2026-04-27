@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Installing...
+  pre_build:
+    commands:
+      - aws ecr get-login-password | docker login --username AWS --password-stdin <ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com
+  build:
+    commands:
+      - docker build -t backend ./backend
+      - docker build -t frontend ./frontend
+      - docker tag backend:latest <ECR_BACKEND>
+      - docker tag frontend:latest <ECR_FRONTEND>
+  post_build:
+    commands:
+      - docker push <ECR_BACKEND>
+      - docker push <ECR_FRONTEND>
