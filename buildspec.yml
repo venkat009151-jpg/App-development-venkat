@@ -1,19 +1,35 @@
 version: 0.2
 
+env:
+  variables:
+    IMAGE_BACKEND: yourdockerhubusername/backend
+    IMAGE_FRONTEND: yourdockerhubusername/frontend
+
 phases:
   install:
     commands:
       - echo Installing...
+
   pre_build:
     commands:
-      - aws ecr get-login-password | docker login --username AWS --password-stdin <ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com
+      - echo Logging into Docker Hub...
+      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+
   build:
     commands:
-      - docker build -t backend ./backend
-      - docker build -t frontend ./frontend
-      - docker tag backend:latest <ECR_BACKEND>
-      - docker tag frontend:latest <ECR_FRONTEND>
+      - echo Building Docker images...
+      - docker build -t backend ./Backend
+      - docker build -t frontend ./Frontend
+
+      - docker tag backend:latest $IMAGE_BACKEND:latest
+      - docker tag frontend:latest $IMAGE_FRONTEND:latest
+
   post_build:
     commands:
-      - docker push <ECR_BACKEND>
-      - docker push <ECR_FRONTEND>
+      - echo Pushing to Docker Hub...
+      - docker push $IMAGE_BACKEND:latest
+      - docker push $IMAGE_FRONTEND:latest
+
+artifacts:
+  files:
+    - '**/*'
