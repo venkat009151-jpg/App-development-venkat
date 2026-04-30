@@ -8,25 +8,31 @@ env:
 phases:
   install:
     commands:
-      - echo Installing...
+      - echo "Installing phase..."
 
   pre_build:
     commands:
-      - echo Logging into Docker Hub...
+      - echo "Checking environment variables..."
+      - echo "Docker username is $DOCKER_USERNAME"
+      
+      - echo "Logging into Docker Hub..."
       - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
 
   build:
     commands:
-      - echo Building Docker images...
+      - echo "Building Docker images..."
+      
       - docker build -t backend ./Backend
       - docker build -t frontend ./Frontend
 
+      - echo "Tagging images..."
       - docker tag backend:latest $IMAGE_BACKEND:latest
       - docker tag frontend:latest $IMAGE_FRONTEND:latest
 
   post_build:
     commands:
-      - echo Pushing to Docker Hub...
+      - echo "Pushing images to Docker Hub..."
+      
       - docker push $IMAGE_BACKEND:latest
       - docker push $IMAGE_FRONTEND:latest
 
