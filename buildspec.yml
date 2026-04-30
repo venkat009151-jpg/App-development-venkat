@@ -2,8 +2,8 @@ version: 0.2
 
 env:
   variables:
-    IMAGE_BACKEND: yourdockerhubusername/backend
-    IMAGE_FRONTEND: yourdockerhubusername/frontend
+    IMAGE_BACKEND: venky009151/backend
+    IMAGE_FRONTEND: venky009151/frontend
 
 phases:
   install:
